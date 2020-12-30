@@ -1,16 +1,8 @@
 # ----------------------------------------------------------------------------
 # package information
 # add el7.x86_64
-execute_process (
-            COMMAND         ${CMAKE_MODULE_PATH}/rpm_kernel_release.sh
-            RESULT_VARIABLE RV
-            OUTPUT_VARIABLE CENTOS_VERSION
-            )
-if (RV EQUAL 0)
-set (KERNEL_RELEASE ${CENTOS_VERSION})
-else ()
+
 set (KERNEL_RELEASE "unknown-arch")
-endif ()
 
 execute_process (
             COMMAND         ${CMAKE_MODULE_PATH}/git_checkin_count.sh

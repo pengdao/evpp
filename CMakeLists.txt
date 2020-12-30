@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 
 project (safe-evpp C CXX)
 
+include ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/toolschain/am3352.cmake")
+
 if (UNIX)
     if(NOT CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE "Release")
@@ -11,7 +13,8 @@ if (UNIX)
          -g
          -fPIC
          -Wall
-         -D__STDC_FORMAT_MACROS
+		 -D__STDC_FORMAT_MACROS
+		 -D_GLIBCXX_USE_NANOSLEEP
          -Wno-unused-parameter
          -Wno-unused-function
          -Wunused-variable
@@ -27,14 +30,12 @@ if (UNIX)
          -Wextra
          -std=c++11
     )
-    include_directories (${PROJECT_SOURCE_DIR}
-                         ${PROJECT_SOURCE_DIR}/3rdparty)
+    include_directories (${PROJECT_SOURCE_DIR})
 else (UNIX)
 set (CXX_FLAGS -DWIN32 -D_WIN32 -EHsc)
     set(VcpkgRoot ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET})
     include_directories(${VcpkgRoot}/include
-                        ${PROJECT_SOURCE_DIR}
-                        ${PROJECT_SOURCE_DIR}/3rdparty/wininclude)
+                        ${PROJECT_SOURCE_DIR})
 
     # On windows, Debug mode
     link_directories(${VcpkgRoot}/debug/lib ${VcpkgRoot}/debug/lib/manual-link)
@@ -59,12 +60,12 @@ endif (UNIX)
 if (HTTPS)
     list(APPEND DEPENDENT_LIBRARIES ssl crypto event_openssl)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEVPP_HTTP_CLIENT_SUPPORTS_SSL")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEVPP_HTTP_SERVER_SUPPORTS_SSL")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DEVPP_HTTP_SERVER_SUPPORTS_SSL")
 endif (HTTPS)
 
 
 if (CMAKE_BENCHMARK_TESTING)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DH_BENCHMARK_TESTING=1")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DH_BENCHMARK_TESTING=1")
 endif (CMAKE_BENCHMARK_TESTING)
 
 set (EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
@@ -87,13 +88,9 @@ message (STATUS "THRIFT_INCLUDE_DIR " ${THRIFT_INCLUDE_DIR})
 message (STATUS "THRIFT_LIBRARY " ${THRIFT_LIBRARY})
 
 add_subdirectory (evpp)
-add_subdirectory (apps)
-add_subdirectory (labs)
 
 if (NOT EVPP_VCPKG_BUILD)
-    add_subdirectory (test)
     add_subdirectory (examples)
-    add_subdirectory (benchmark)
 endif ()
 
 set (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")

@@ -11,27 +11,27 @@
 #ifdef GOOGLE_STRIP_LOG
 
 #if GOOGLE_STRIP_LOG == 0
-#define LOG_TRACE LOG(INFO)
-#define LOG_DEBUG LOG(INFO)
-#define LOG_INFO  LOG(INFO)
-#define DLOG_TRACE LOG(INFO) << __PRETTY_FUNCTION__ << " this=" << this << " "
+#define LOG_TRACE SYSLOG(INFO)
+#define LOG_DEBUG SYSLOG(INFO)
+#define LOG_INFO  SYSLOG(INFO)
+#define DLOG_TRACE SYSLOG(INFO) << __PRETTY_FUNCTION__ << " this=" << this << " "
 #else
-#define LOG_TRACE if (false) LOG(INFO)
-#define LOG_DEBUG if (false) LOG(INFO)
-#define LOG_INFO  if (false) LOG(INFO)
-#define DLOG_TRACE if (false) LOG(INFO)
+#define LOG_TRACE if (false) SYSLOG(INFO)
+#define LOG_DEBUG if (false) SYSLOG(INFO)
+#define LOG_INFO  if (false) SYSLOG(INFO)
+#define DLOG_TRACE if (false) SYSLOG(INFO)
 #endif
 
 #if GOOGLE_STRIP_LOG <= 1
-#define LOG_WARN  LOG(WARNING)
-#define DLOG_WARN LOG(WARNING) << __PRETTY_FUNCTION__ << " this=" << this << " "
+#define LOG_WARN  SYSLOG(WARNING)
+#define DLOG_WARN SYSLOG(WARNING) << __PRETTY_FUNCTION__ << " this=" << this << " "
 #else
-#define LOG_WARN  if (false) LOG(WARNING)
-#define DLOG_WARN if (false) LOG(WARNING)
+#define LOG_WARN  if (false) SYSLOG(WARNING)
+#define DLOG_WARN if (false) SYSLOG(WARNING)
 #endif
 
-#define LOG_ERROR LOG(ERROR)
-#define LOG_FATAL LOG(FATAL)
+#define LOG_ERROR SYSLOG(ERROR)
+#define LOG_FATAL SYSLOG(FATAL)
 
 #else
 #define LOG_TRACE std::cout << __FILE__ << ":" << __LINE__ << " "
